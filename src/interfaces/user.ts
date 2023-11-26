@@ -1,3 +1,5 @@
+import express from "express";
+
 export interface User {
   _id: string;
   email: string;
@@ -14,4 +16,14 @@ export interface Register {
 export interface Login {
   email: string;
   password: string;
+}
+
+export interface CustomRequest extends express.Request {
+  user?: {
+    _id: string;
+    email: string;
+    fullname: string;
+    iat: number;
+    exp: number;
+  };
 }

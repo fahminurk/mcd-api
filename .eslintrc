@@ -18,7 +18,9 @@
     "import/extensions": 0,
     "@typescript-eslint/no-redeclare": 0,
     "quotes": "off",
-    "@typescript-eslint/quotes": 0
+    "@typescript-eslint/quotes": 0,
+    "@typescript-eslint/comma-dangle": 0,
+    "import/no-extraneous-dependencies": 0
   },
   "settings": {
     "import/parsers": {
