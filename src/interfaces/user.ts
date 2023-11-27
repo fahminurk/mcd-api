@@ -11,6 +11,7 @@ export interface Register {
   email: string;
   fullname: string;
   password: string;
+  isSuperAdmin?: boolean;
 }
 
 export interface Login {
