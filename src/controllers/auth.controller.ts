@@ -59,7 +59,7 @@ export const login = async (req: express.Request, res: express.Response) => {
       fullname: checkUser.fullname,
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
-      expiresIn: "1m",
+      expiresIn: "1d",
     });
 
     return res.status(200).send({ payload, token });
