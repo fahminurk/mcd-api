@@ -11,10 +11,10 @@ export const createUser = (values: Register) => {
   new UserModel(values).save().then((user) => user.toObject());
 };
 
-export const deleteUserById = (id: string) => {
-  UserModel.findOneAndDelete({ _id: id });
+export const deleteUserById = async (id: string) => {
+  await UserModel.findByIdAndDelete({ _id: id });
 };
 
-export const updateUserById = (id: string, values: User) => {
-  UserModel.findByIdAndUpdate(id, values);
+export const updateUserById = async (id: string, values: User) => {
+  await UserModel.findByIdAndUpdate(id, values);
 };
