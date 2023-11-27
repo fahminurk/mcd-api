@@ -14,18 +14,13 @@ export const isAuthenticated = async (
     }
 
     jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
-      try {
-        if (err) {
-          console.log(err);
-          return res.status(401).send("token expired");
-        }
-      } catch (error) {
-        console.log(error);
+      if (err) {
+        return res.status(401).send({ message: "token expired" });
       }
-      req.user = decoded as CustomRequest["user"];
-    });
 
-    next();
+      req.user = decoded as CustomRequest["user"];
+      next();
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).send({ message: "server error" });
