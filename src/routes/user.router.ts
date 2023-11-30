@@ -4,10 +4,10 @@ import {
   deleteUser,
   getAllUser,
 } from "../controllers/user.controller";
-import { isAuthenticated } from "../middlewares/authorization";
+import { jwtDecoder } from "../middlewares/jwtDecoder";
 
 export default (router: express.Router) => {
-  router.get("/users", isAuthenticated, getAllUser);
-  router.delete("/users/:id", deleteUser);
-  router.post("/users/new", createNewUser);
+  router.get("/users", jwtDecoder, getAllUser);
+  router.delete("/users/:id", jwtDecoder, deleteUser);
+  router.post("/users/new", jwtDecoder, createNewUser);
 };

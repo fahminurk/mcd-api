@@ -4,10 +4,11 @@ import helmet from "helmet";
 import cors from "cors";
 import routes from "./routes";
 import cookieParser from "cookie-parser";
-import * as middlewares from "./middlewares";
-import MessageResponse from "./interfaces/MessageResponse";
-import mongoose from "mongoose";
 import compression from "compression";
+import path from "path";
+import { PrismaClient } from "@prisma/client";
+
+export const prisma = new PrismaClient();
 
 require("dotenv").config();
 const app = express();
@@ -19,23 +20,23 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(compression());
 
-app.get<{}, MessageResponse>("/", (req, res) => {
+app.get("/", (req, res) => {
   res.json({
     message: "welcome to mekdi API!",
   });
 });
 
 app.use("/", routes());
-app.use(middlewares.notFound);
-app.use(middlewares.errorHandler);
+app.use("/category", express.static(path.join(__dirname, "public/category")));
+app.use("/product", express.static(path.join(__dirname, "public/product")));
 
-mongoose.Promise = Promise;
-mongoose.connect(process.env.MONGODB_URI as string);
-mongoose.connection.on("connected", () => {
-  console.log("MongoDB connected");
-});
-mongoose.connection.on("error", (err: Error) => {
-  console.log(`MongoDB connection error: ${err}`);
-});
+prisma
+  .$connect()
+  .then(() => {
+    console.log("connected to database");
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
 export default app;

@@ -1,12 +1,8 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import {
-  createUser,
-  getUserByEmail,
-  getUserById,
-} from "../services/user.service";
-import { CustomRequest } from "../interfaces/user";
+import { create, getByEmail, getById } from "../services/user.service";
+import { CustomRequest } from "../interfaces";
 
 export const register = async (req: express.Request, res: express.Response) => {
   try {
@@ -16,7 +12,7 @@ export const register = async (req: express.Request, res: express.Response) => {
       return res.status(400).json({ message: "fields required" });
     }
 
-    const checkUser = await getUserByEmail(email);
+    const checkUser = await getByEmail(email);
 
     if (checkUser) {
       return res.status(400).json({ message: "user already exists" });
@@ -24,7 +20,7 @@ export const register = async (req: express.Request, res: express.Response) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await createUser({
+    const user = create({
       email,
       password: hashedPassword,
       fullname,
@@ -41,7 +37,7 @@ export const login = async (req: express.Request, res: express.Response) => {
   try {
     const { email, password } = req.body;
 
-    const checkUser = await getUserByEmail(email).select("+password").lean();
+    const checkUser = await getByEmail(email);
 
     if (!checkUser) {
       return res.status(404).send({ message: "user not found" });
@@ -54,7 +50,7 @@ export const login = async (req: express.Request, res: express.Response) => {
     }
 
     const payload = {
-      _id: checkUser._id,
+      id: checkUser.id,
       email: checkUser.email,
       fullname: checkUser.fullname,
     };
@@ -73,7 +69,7 @@ export const getToken = async (req: CustomRequest, res: express.Response) => {
   try {
     const user = req.user!;
 
-    const userDetail = await getUserById(user._id);
+    const userDetail = await getById(user.id);
 
     if (!userDetail) {
       return res.status(400).send({ message: "user not found" });
